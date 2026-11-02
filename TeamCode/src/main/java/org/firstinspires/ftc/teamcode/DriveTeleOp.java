@@ -25,6 +25,9 @@ public class DriveTeleOp extends OpMode {
     // Which turret the controls currently affect
     private Turret.Side selectedTurret = Turret.Side.POLLEN;
 
+    private boolean midIntakeUp = false; // gate starts down (MidIntake constructor sets it down)
+    private boolean flowerFrontUp = true; // starts up
+
     @Override
     public void init() {
         r = new Robot(hardwareMap);
@@ -37,6 +40,8 @@ public class DriveTeleOp extends OpMode {
     public void start() {
         telemetry.setMsTransmissionInterval(10);
         runtime.reset();
+        r.intakePitch.intakeDown();
+        r.intakePitch.intakeDie();
     }
 
     @Override
@@ -49,6 +54,8 @@ public class DriveTeleOp extends OpMode {
         // turret();
         telemetry();
         intake();
+        midIntake();
+        flowerFront();
         lastTime = runtime.seconds();
     }
 
@@ -75,11 +82,46 @@ public class DriveTeleOp extends OpMode {
         }
     }
 
+
+    public void midIntake() {
+        // Only act on the moment the trigger goes from not pressed to pressed
+        if (currentGamepad2.left_trigger_pressed && !previousGamepad2.left_trigger_pressed) {
+            midIntakeUp = !midIntakeUp;
+
+            if (midIntakeUp) {
+                r.midIntake.intakeUp();
+            } else {
+                r.midIntake.intakeDown();
+            }
+        }
+    }
+    public void flowerFront() {
+        if (currentGamepad2.right_trigger_pressed && !previousGamepad2.right_trigger_pressed) {
+            flowerFrontUp = !flowerFrontUp;
+
+            if (flowerFrontUp) {
+                r.flowerFront.flowerUp();
+            } else {
+                r.flowerFront.flowerDown();
+            }
+        }
+    }
+
+    public void Shoot(){
+        if (currentGamepad1.right_trigger_pressed && !previousGamepad1.right_trigger_pressed){
+            r.pollenTransfer.shoot();
+            //r.nectarTransfer.shoot();
+        } else{
+            r.pollenTransfer.stop();
+            //r.nectarTransfer.stop();
+        }
+    }
+
     // A is toggle
     // Left stick y is pitch of turret
     // dpad up/down increments flywheel
     // b is stop
-    public void turret() {
+    /*public void turret() {
         if (currentGamepad1.a && !previousGamepad1.a) {
             selectedTurret = (selectedTurret == Turret.Side.POLLEN)
                     ? Turret.Side.NECTAR
@@ -102,7 +144,7 @@ public class DriveTeleOp extends OpMode {
             r.turret.adjustPitch(selectedTurret, stick * PITCH_SPEED * dt);
         }
         r.turret.update();
-    }
+    } */
 
     public void telemetry() {
         telemetry.addData("Selected Turret", selectedTurret);
@@ -111,11 +153,11 @@ public class DriveTeleOp extends OpMode {
         telemetry.update();
 
     }
-
+    /*
     private void addTurretTelemetry(String label, Turret.Side side) {
         telemetry.addData(label + " Target RPM", "%.0f", r.turret.getTargetRPM(side));
         telemetry.addData(label + " Actual RPM", "%.0f", r.turret.getRPM(side));
         telemetry.addData(label + " Pitch", "%.3f", r.turret.getPitch(side));
-    }
+    }*/
 
 }
