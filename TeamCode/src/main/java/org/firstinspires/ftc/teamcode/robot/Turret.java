@@ -18,6 +18,7 @@ public class Turret {
     private static class Shooter {
         final DcMotorEx flywheel;
         final Servo pitch;
+
         final PID pid;
         double targetRPM = 0;
         double currentRPM = 0;
@@ -50,6 +51,8 @@ public class Turret {
 
     private final Shooter pollen;
     private final Shooter nectar;
+    private final Servo pollenSpin;
+    private double spinPos = SPIN_START;
 
     public Turret(HardwareMap hardwareMap) {
         pollen = new Shooter(hardwareMap, "pollenFlywheel", "pollenPitch",
@@ -68,6 +71,9 @@ public class Turret {
 
         setPitch(Side.POLLEN, PITCH_START);
         setPitch(Side.NECTAR, PITCH_START);
+        pollenSpin = hardwareMap.get(Servo.class, "pollenSpin");
+        pollenSpin.setDirection(Servo.Direction.FORWARD);
+        setSpin(SPIN_START);
     }
 
     private Shooter get(Side side) {
@@ -112,5 +118,18 @@ public class Turret {
     public void update() {
         pollen.update();
         nectar.update();
+    }
+
+    public void setSpin(double position) {
+        spinPos = Math.max(SPIN_MIN, Math.min(SPIN_MAX, position)); // keep within limits
+        pollenSpin.setPosition(spinPos);
+    }
+
+    public void adjustSpin(double delta) {
+        setSpin(spinPos + delta);
+    }
+
+    public double getSpin() {
+        return spinPos;
     }
 }

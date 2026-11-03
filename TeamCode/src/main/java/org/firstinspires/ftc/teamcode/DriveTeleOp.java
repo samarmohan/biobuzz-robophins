@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Turret;
 
-@TeleOp(name="TeleOp")
+@TeleOp(name="DriveTeleOp")
 public class DriveTeleOp extends OpMode {
 
     private Robot r;
@@ -56,6 +56,7 @@ public class DriveTeleOp extends OpMode {
         intake();
         midIntake();
         flowerFront();
+        Shoot();
         lastTime = runtime.seconds();
     }
 
@@ -150,6 +151,8 @@ public class DriveTeleOp extends OpMode {
         telemetry.addData("Selected Turret", selectedTurret);
         //addTurretTelemetry("Pollen", Turret.Side.POLLEN);
         //addTurretTelemetry("Nectar", Turret.Side.NECTAR);
+        telemetry.addData("flowerFrontUp", flowerFrontUp);
+        telemetry.addData("midIntakeUp", midIntakeUp);
         telemetry.update();
 
     }
