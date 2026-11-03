@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
-import org.firstinspires.ftc.teamcode.robot.Turret;
+
 
 @TeleOp(name="DriveTeleOp")
 public class DriveTeleOp extends OpMode {
@@ -23,7 +23,7 @@ public class DriveTeleOp extends OpMode {
     private double lastTime;
 
     // Which turret the controls currently affect
-    private Turret.Side selectedTurret = Turret.Side.POLLEN;
+    //private Turret.Side selectedTurret = Turret.Side.POLLEN;
 
     private boolean midIntakeUp = false; // gate starts down (MidIntake constructor sets it down)
     private boolean flowerFrontUp = true; // starts up
@@ -40,8 +40,11 @@ public class DriveTeleOp extends OpMode {
     public void start() {
         telemetry.setMsTransmissionInterval(10);
         runtime.reset();
-        r.intakePitch.intakeDown();
-        r.intakePitch.intakeDie();
+        r.midIntake.intakeDown();
+        r.flowerFront.flowerUp();
+        //r.intakePitch.intakeDown();
+        //r.intakePitch.intakeDie();
+
     }
 
     @Override
@@ -89,7 +92,7 @@ public class DriveTeleOp extends OpMode {
         if (currentGamepad2.left_trigger_pressed && !previousGamepad2.left_trigger_pressed) {
             midIntakeUp = !midIntakeUp;
 
-            if (midIntakeUp) {
+            if(midIntakeUp){
                 r.midIntake.intakeUp();
             } else {
                 r.midIntake.intakeDown();
@@ -148,7 +151,7 @@ public class DriveTeleOp extends OpMode {
     } */
 
     public void telemetry() {
-        telemetry.addData("Selected Turret", selectedTurret);
+        //telemetry.addData("Selected Turret", selectedTurret);
         //addTurretTelemetry("Pollen", Turret.Side.POLLEN);
         //addTurretTelemetry("Nectar", Turret.Side.NECTAR);
         telemetry.addData("flowerFrontUp", flowerFrontUp);

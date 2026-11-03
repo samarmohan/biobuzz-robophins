@@ -7,13 +7,12 @@ public class FlowerFront {
     private static final double UP_POS = 0.55;
     // TUNE: how far to move from up to reach the down position.
     // Negative means down is a smaller servo value than up.
-    private static final double DOWN_OFFSET = -0.35;
+    private static final double DOWN_OFFSET = -0.90;
 
     private Servo flowerFront;
 
     public FlowerFront(HardwareMap hardwareMap) {
         flowerFront = hardwareMap.get(Servo.class, "flowerFront");
-        flowerUp();
     }
 
     public void flowerDown() {

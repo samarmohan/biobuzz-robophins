@@ -24,6 +24,8 @@ public class Robot {
         intake = new Intake(hardwareMap);
         midIntake = new MidIntake(hardwareMap);
         flowerFront = new FlowerFront(hardwareMap);
+        intakePitch = new IntakePitch(hardwareMap);
+        pollenTransfer = new Shoot(hardwareMap);
     }
 
 }

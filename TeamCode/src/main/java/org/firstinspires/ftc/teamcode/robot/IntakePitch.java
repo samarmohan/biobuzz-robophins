@@ -10,24 +10,21 @@ public class IntakePitch {
     private static final double UP_POS = 0.55;
     private static final double DOWN_OFFSET = -0.35;
 
-    private ServoImplEx intakePitch;
+    private Servo intakePitch;
 
     public IntakePitch(HardwareMap hardwareMap) {
-        intakePitch = hardwareMap.get(ServoImplEx.class, "intakePitch");
-        intakeUp();
+        intakePitch = hardwareMap.get(Servo.class, "intakePitch");
     }
 
     public void intakeDown() {
-        intakePitch.setPwmEnable();
         intakePitch.setPosition(UP_POS + DOWN_OFFSET);
     }
 
     public void intakeUp() {
-        intakePitch.setPwmEnable();
         intakePitch.setPosition(UP_POS);
     }
 
-    public void intakeDie() {
-        intakePitch.setPwmDisable();
-    }
+//    public void intakeDie() {
+//        intakePitch.setPwmDisable();
+//    }
 }
