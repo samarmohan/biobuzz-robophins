@@ -8,24 +8,20 @@ public class Robot {
     //ADD LATER
     public Intake intake;
 
-    public MidIntake midIntake;
+    public Wall wall;
 
-    public FlowerFront flowerFront;
+    public Flower flower;
 
-    public IntakePitch intakePitch;
+    public Kickup kickup;
 
-    public Shoot pollenTransfer;
-
-    //public Shoot nectarTransfer
 
     public Robot(HardwareMap hardwareMap) {
         drivetrain = new Drivetrain(hardwareMap);
-        //turret = new Turret(hardwareMap);
+        // turret = new Turret(hardwareMap);
         intake = new Intake(hardwareMap);
-        midIntake = new MidIntake(hardwareMap);
-        flowerFront = new FlowerFront(hardwareMap);
-        intakePitch = new IntakePitch(hardwareMap);
-        pollenTransfer = new Shoot(hardwareMap);
+        wall = new Wall(hardwareMap);
+        flower = new Flower(hardwareMap);
+        kickup = new Kickup(hardwareMap);
     }
 
 }

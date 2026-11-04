@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.utils.TeleOpConstants.*;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -25,8 +23,10 @@ public class DriveTeleOp extends OpMode {
     // Which turret the controls currently affect
     //private Turret.Side selectedTurret = Turret.Side.POLLEN;
 
-    private boolean midIntakeUp = false; // gate starts down (MidIntake constructor sets it down)
-    private boolean flowerFrontUp = true; // starts up
+    private boolean wallUp = false; // gate starts down (MidIntake constructor sets it down)
+    private boolean flowerUp = true; // starts up
+    private boolean intakeUp = false;
+    private boolean kickupOn = false;
 
     @Override
     public void init() {
@@ -40,10 +40,9 @@ public class DriveTeleOp extends OpMode {
     public void start() {
         telemetry.setMsTransmissionInterval(10);
         runtime.reset();
-        r.midIntake.intakeDown();
-        r.flowerFront.flowerUp();
-        //r.intakePitch.intakeDown();
-        //r.intakePitch.intakeDie();
+        r.wall.down();
+        r.flower.up();
+        r.intake.down();
 
     }
 
@@ -57,9 +56,9 @@ public class DriveTeleOp extends OpMode {
         // turret();
         telemetry();
         intake();
-        midIntake();
-        flowerFront();
-        Shoot();
+        wall();
+        flower();
+        shoot();
         lastTime = runtime.seconds();
     }
 
@@ -78,46 +77,45 @@ public class DriveTeleOp extends OpMode {
 
     public void intake() {
         if (currentGamepad1.a) {
-            r.intake.intakeOn();
+            r.intake.on();
         } else if (currentGamepad1.b) {
-            r.intake.intakeOff();
+            r.intake.off();
         } else if (currentGamepad1.y) {
-            r.intake.intakeOut();
+            r.intake.out();
         }
     }
 
 
-    public void midIntake() {
-        // Only act on the moment the trigger goes from not pressed to pressed
-        if (currentGamepad2.left_trigger_pressed && !previousGamepad2.left_trigger_pressed) {
-            midIntakeUp = !midIntakeUp;
+    public void wall() {
+        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
+            wallUp = !wallUp;
 
-            if(midIntakeUp){
-                r.midIntake.intakeUp();
+            if(wallUp){
+                r.wall.up();
             } else {
-                r.midIntake.intakeDown();
+                r.wall.down();
             }
         }
     }
-    public void flowerFront() {
-        if (currentGamepad2.right_trigger_pressed && !previousGamepad2.right_trigger_pressed) {
-            flowerFrontUp = !flowerFrontUp;
+    public void flower() {
+        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
+            flowerUp = !flowerUp;
 
-            if (flowerFrontUp) {
-                r.flowerFront.flowerUp();
+            if (flowerUp) {
+                r.flower.up();
             } else {
-                r.flowerFront.flowerDown();
+                r.flower.down();
             }
         }
     }
 
-    public void Shoot(){
-        if (currentGamepad1.right_trigger_pressed && !previousGamepad1.right_trigger_pressed){
-            r.pollenTransfer.shoot();
-            //r.nectarTransfer.shoot();
+    public void shoot(){
+        if (currentGamepad1.right_trigger > 0.5) {
+            kickupOn = true;
+            r.kickup.shoot();
         } else{
-            r.pollenTransfer.stop();
-            //r.nectarTransfer.stop();
+            kickupOn = false;
+            r.kickup.stop();
         }
     }
 
@@ -154,8 +152,10 @@ public class DriveTeleOp extends OpMode {
         //telemetry.addData("Selected Turret", selectedTurret);
         //addTurretTelemetry("Pollen", Turret.Side.POLLEN);
         //addTurretTelemetry("Nectar", Turret.Side.NECTAR);
-        telemetry.addData("flowerFrontUp", flowerFrontUp);
-        telemetry.addData("midIntakeUp", midIntakeUp);
+        telemetry.addData("flowerUp", flowerUp);
+        telemetry.addData("wallUp", wallUp);
+        telemetry.addData("intakeUp", intakeUp);
+        telemetry.addData("kickup", kickupOn);
         telemetry.update();
 
     }
