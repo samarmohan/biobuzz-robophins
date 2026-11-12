@@ -12,7 +12,7 @@ public class Wall {
     private Servo wall;
 
     public Wall(HardwareMap hardwareMap) {
-        wall = hardwareMap.get(Servo.class, "midIntake");
+        wall = hardwareMap.get(Servo.class, "wall");
     }
 
     public void down() {

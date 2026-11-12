@@ -8,29 +8,23 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 public class Kickup {
 
-    public CRServo pollenTransfer;
+    public CRServo pollenKickup;
     public CRServo nectarTransfer;
 
     public DcMotorEx flywheel;
 
     public Kickup(HardwareMap hardwareMap) {
-        pollenTransfer = hardwareMap.get(CRServo.class, "pollenTransfer");
-        nectarTransfer = hardwareMap.get(CRServo.class, "nectarTransfer");
-
-
-        flywheel = hardwareMap.get(DcMotorEx.class, "pollenFlywheel");
-        flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        pollenKickup = hardwareMap.get(CRServo.class, "pollenKickup");
+        nectarTransfer = hardwareMap.get(CRServo.class, "nectarKickup");
     }
 
     public void shoot() {
-        pollenTransfer.setPower(1);
-        nectarTransfer.setPower(-1);
-        flywheel.setPower(1);
+        pollenKickup.setPower(0.75);
+        nectarTransfer.setPower(-0.75);
     }
 
     public void stop() {
-        pollenTransfer.setPower(0);
+        pollenKickup.setPower(0);
         nectarTransfer.setPower(0);
     }
 }

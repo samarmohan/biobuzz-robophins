@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Intake {
     private DcMotor intake;
-    private Servo intakePitch;
+    //private Servo intakePitch;
 
     private static final double UP_POS = 0.55;
     private static final double DOWN_OFFSET = -0.35;
@@ -16,9 +16,7 @@ public class Intake {
         intake.setDirection(DcMotor.Direction.FORWARD);
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        intakePitch = hardwareMap.get(Servo.class, "intakePitch");
-
-
+        //intakePitch = hardwareMap.get(Servo.class, "intakePitch");
     }
 
     public void on() {
@@ -33,13 +31,13 @@ public class Intake {
         intake.setPower(-1);
     }
 
-    public void down() {
-        intakePitch.setPosition(UP_POS + DOWN_OFFSET);
-    }
-
-    public void up() {
-        intakePitch.setPosition(UP_POS);
-    }
+//    public void down() {
+//        intakePitch.setPosition(UP_POS + DOWN_OFFSET);
+//    }
+//
+//    public void up() {
+//        intakePitch.setPosition(UP_POS);
+//    }
 
 //    public void intakeDie() {
 //        intakePitch.setPwmDisable();

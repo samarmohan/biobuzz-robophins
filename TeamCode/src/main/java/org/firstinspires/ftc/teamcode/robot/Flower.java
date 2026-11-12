@@ -8,7 +8,7 @@ public class Flower {
     private Servo flower;
 
     public Flower(HardwareMap hardwareMap) {
-        flower = hardwareMap.get(Servo.class, "flowerFront");
+        flower = hardwareMap.get(Servo.class, "flower");
     }
 
     public void down() {
@@ -16,6 +16,6 @@ public class Flower {
     }
 
     public void up() {
-        flower.setPosition(1);
+        flower.setPosition(0.9);
     }
 }
