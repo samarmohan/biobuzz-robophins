@@ -3,42 +3,41 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import static org.firstinspires.ftc.teamcode.utils.TeleOpConstants.*;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.utils.PID;
 
 public class Turret {
 
-    // Pollen flywheel and pitch
+    // Motors
     private final DcMotorEx flywheel;
-    private final Servo pitch;
-    private final CRServo pollenTurret;
+    private final DcMotorEx turretSpin;
 
+    // PID controllers
     private final PID flywheelPID;
     private final PID aimPID;
 
+    // Flywheel
     private double targetRPM = 0;
     private double currentRPM = 0;
     private double flywheelPower = 0;
-    private double pitchPos = PITCH_START;
 
-    // Auto aim
+    // Turret rotation
     private static final double AIM_MAX_POWER = 0.6;
     private static final double AIM_SIGN = 1.0;
 
     private double aimPower = 0;
+    private double manualPower = 0;
     private double spinPower = 0;
 
     public Turret(HardwareMap hardwareMap) {
 
-        // Flywheel
-        flywheel = hardwareMap.get(DcMotorEx.class, "pollenFlywheel");
+        // Flywheel motor
+        flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
 
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -54,20 +53,26 @@ public class Turret {
 
         flywheelPID.setFlywheel(true);
 
-        // Pitch
-        pitch = hardwareMap.get(Servo.class, "pollenPitch");
-        pitch.setDirection(Servo.Direction.FORWARD);
-        setPitch(PITCH_START);
+        // Turret rotation motor
+        turretSpin = hardwareMap.get(DcMotorEx.class, "turretSpin");
 
-        // Turret rotation
-        pollenTurret = hardwareMap.get(CRServo.class, "pollenServo");
-        pollenTurret.setDirection(DcMotorSimple.Direction.FORWARD);
+        turretSpin.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turretSpin.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        turretSpin.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        // Auto aim PID
-        aimPID = new PID(AIM_KP, AIM_KI, AIM_KD, AIM_KF, AIM_DEADZONE);
+        // Autoaim PID
+        aimPID = new PID(
+                AIM_KP,
+                AIM_KI,
+                AIM_KD,
+                AIM_KF,
+                AIM_DEADZONE
+        );
     }
 
+    // -------------------------
     // Flywheel controls
+    // -------------------------
 
     public void setTargetRPM(double rpm) {
         targetRPM = Range.clip(rpm, 0, MAX_FLYWHEEL_RPM);
@@ -93,22 +98,23 @@ public class Turret {
         targetRPM = 0;
     }
 
-    // Pitch controls
+    // -------------------------
+    // Manual turret rotation
+    // -------------------------
 
-    public void setPitch(double position) {
-        pitchPos = Range.clip(position, PITCH_MIN, PITCH_MAX);
-        pitch.setPosition(pitchPos);
+    public void manualRotate(double power) {
+        manualPower = Range.clip(power, -AIM_MAX_POWER, AIM_MAX_POWER);
     }
 
-    public void adjustPitch(double delta) {
-        setPitch(pitchPos + delta);
+    public void stopRotation() {
+        manualPower = 0;
+        aimPower = 0;
+        aimPID.reset();
     }
 
-    public double getPitch() {
-        return pitchPos;
-    }
-
-    // Auto aim
+    // -------------------------
+    // Autoaim
+    // -------------------------
 
     public void autoAim(boolean hasTarget, double tx) {
 
@@ -130,7 +136,9 @@ public class Turret {
         return spinPower;
     }
 
+    // -------------------------
     // Update
+    // -------------------------
 
     public void update() {
 
@@ -147,15 +155,21 @@ public class Turret {
             flywheel.setPower(flywheelPower);
         }
 
-        // Pollen turret rotation
-        spinPower = Range.clip(
-                aimPower,
-                -AIM_MAX_POWER,
-                AIM_MAX_POWER
-        );
+        // Turret rotation
+        // Manual control takes priority over autoaim.
+        if (Math.abs(manualPower) > 0.001) {
+            spinPower = manualPower;
+        } else {
+            spinPower = Range.clip(
+                    aimPower,
+                    -AIM_MAX_POWER,
+                    AIM_MAX_POWER
+            );
+        }
 
+        turretSpin.setPower(spinPower);
+
+        // Clear autoaim command after applying it.
         aimPower = 0;
-
-        pollenTurret.setPower(spinPower);
     }
 }
