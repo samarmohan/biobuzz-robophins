@@ -30,7 +30,7 @@ public class DriveTeleOp extends OpMode {
         telemetry.update();
 
         // Initial flywheel RPM
-        r.turret.setTargetRPM(5900.0);
+        r.turret.setTargetRPM(3000.0);
     }
 
     @Override
@@ -141,14 +141,14 @@ public class DriveTeleOp extends OpMode {
 
         r.limelight.update();
 
-        if (currentGamepad1.left_bumper) {
+        if (currentGamepad1.left_trigger > 0.5) {
 
             r.turret.autoAim(
                     r.limelight.hasTarget(),
                     r.limelight.getTx()
             );
 
-        } else if (previousGamepad1.left_bumper) {
+        } else if (previousGamepad1.left_trigger > 0.5) {
 
             r.turret.holdSpin();
         }
@@ -187,9 +187,26 @@ public class DriveTeleOp extends OpMode {
 
     public void telemetry() {
 
-        telemetry.addData("Kickup", kickupOn);
+        telemetry.addLine("========== AUTO AIM ==========");
 
-        telemetry.addLine("------------------------------");
+        telemetry.addData("AutoAim",
+                (currentGamepad1.left_trigger > 0.5) ? "ACTIVE" : "INACTIVE");
+
+        telemetry.addData("Has Target",
+                r.limelight.hasTarget());
+
+        telemetry.addData("TX (deg)",
+                "%.2f", r.limelight.getTx());
+
+        telemetry.addData("TA",
+                "%.2f", r.limelight.getTa());
+
+        telemetry.addData("Turret Spin Power",
+                "%.3f", r.turret.getSpinPower());
+
+        telemetry.addLine("========== FLYWHEEL SYSTEM ==========");
+
+        telemetry.addData("Kickup", kickupOn);
 
         // Flywheel
         telemetry.addData(
@@ -210,7 +227,7 @@ public class DriveTeleOp extends OpMode {
                 r.turret.getPower()
         );
 
-        telemetry.addLine("------------------------------");
+        telemetry.addLine("========== LL ==========");
 
         // Limelight
         telemetry.addData(
