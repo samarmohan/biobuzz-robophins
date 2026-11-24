@@ -1,22 +1,26 @@
-
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 public class Kickup {
-
-    public CRServo pollenKickup;
+    private DcMotor kickup;
 
     public Kickup(HardwareMap hardwareMap) {
-        pollenKickup = hardwareMap.get(CRServo.class, "pollenKickup");
+        kickup = hardwareMap.get(DcMotor.class, "kickup");
+        kickup.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void shoot() {
-        pollenKickup.setPower(0.75);
+        kickup.setPower(1);
+    }
+
+    public void push(){
+        kickup.setPower(-0.5);
     }
 
     public void stop() {
-        pollenKickup.setPower(0);
+        kickup.setPower(0);
     }
 }

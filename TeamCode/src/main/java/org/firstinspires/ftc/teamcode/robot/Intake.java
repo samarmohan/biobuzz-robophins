@@ -1,22 +1,30 @@
+
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
+// import com.qualcomm.robotcore.hardware.Servo;
 
 public class Intake {
-    private DcMotor intake;
-    //private Servo intakePitch;
 
-    private static final double UP_POS = 0.55;
-    private static final double DOWN_OFFSET = -0.35;
+    private DcMotor intake;
+
+
+    // Servo is not wired yet.
+    // private Servo intakePitch;
+
+    // private static final double UP_POS = 0.55;
+    // private static final double DOWN_OFFSET = -0.35;
 
     public Intake(HardwareMap hardwareMap) {
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //intakePitch = hardwareMap.get(Servo.class, "intakePitch");
+        intake = hardwareMap.get(DcMotor.class, "intake");
+
+        intake.setDirection(DcMotor.Direction.REVERSE);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // intakePitch = hardwareMap.get(Servo.class, "intakePitch");
     }
 
     public void on() {
@@ -31,16 +39,17 @@ public class Intake {
         intake.setPower(-1);
     }
 
-//    public void down() {
-//        intakePitch.setPosition(UP_POS + DOWN_OFFSET);
-//    }
-//
-//    public void up() {
-//        intakePitch.setPosition(UP_POS);
-//    }
+    /*
+    public void down() {
+        intakePitch.setPosition(UP_POS + DOWN_OFFSET);
+    }
 
-//    public void intakeDie() {
-//        intakePitch.setPwmDisable();
-//    }
+    public void up() {
+        intakePitch.setPosition(UP_POS);
+    }
 
+    public void intakeDie() {
+        intakePitch.setPwmDisable();
+    }
+    */
 }
