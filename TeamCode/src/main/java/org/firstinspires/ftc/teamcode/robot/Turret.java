@@ -27,8 +27,9 @@ public class Turret {
     private double flywheelPower = 0;
 
     // Turret rotation
-    private static final double AIM_MAX_POWER = 0.6;
+    private static final double AIM_MAX_POWER = 1.0;
     private static final double AIM_SIGN = 1.0;
+    private static final double AIM_MULTIPLIER = 1.0;
 
     private double aimPower = 0;
     private double manualPower = 0;
@@ -94,7 +95,7 @@ public class Turret {
         return flywheelPower;
     }
 
-    public void stopFlywheels() {
+    public void stopFlywheel() {
         targetRPM = 0;
     }
 
@@ -124,7 +125,7 @@ public class Turret {
         }
 
         double output = -aimPID.update(0.0, tx);
-        aimPower = AIM_SIGN * output;
+        aimPower = AIM_SIGN * output * AIM_MULTIPLIER;
     }
 
     public void holdSpin() {

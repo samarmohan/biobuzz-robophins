@@ -29,9 +29,9 @@ public class TeleOpConstants {
     public static final double STICK_DEADBAND = 0.05;
 
 
-    public static final double AIM_KP = 0.015;
+    public static final double AIM_KP = 0.05;
     public static final double AIM_KI = 0.0;
-    public static final double AIM_KD = 0.0;
-    public static final double AIM_KF = 0.05;
-    public static final double AIM_DEADZONE = 0.5;
+    public static final double AIM_KD = 1.0;
+    public static final double AIM_KF = 0.1;
+    public static final double AIM_DEADZONE = 3;
 }
